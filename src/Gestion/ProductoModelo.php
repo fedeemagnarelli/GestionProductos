@@ -30,27 +30,34 @@ class ProductoModelo {
     }
 
     //Dentro de estas funciones voy a crear la paginacion otra opcion podria haber sido el uso de DataTables o algun framework para la paginacion.
-    public function obtenerCantidadTotal($search = null) {
-        $productos = $this->leer();
-        if($search){
-            $productos = array_filter($productos, function($producto) use ($search){
-                return strpos(strtolower($producto['nombre']), strtolower($search)) !== false;
-            });
-        }
-        return count($productos);
-    }
-
     public function obtenerTodos($pagina = 1, $productosPorPagina = 5, $search = null) {
         $productos = $this->leer();
-        if($search){
-            $productos = array_filter($productos, function($producto) use ($search){
-                return strpos(strtolower($producto['nombre']), strtolower($search)) !== false;
+        if($search) {
+            $productos = array_filter($productos, function($producto) use ($search) {
+                return strpos($producto['nombre'], $search) !== false || 
+                       strpos((string)$producto['precio'], $search) !== false || 
+                       strpos($producto['created_at'], $search) !== false;
             });
         }
+
         $inicio = ($pagina - 1) * $productosPorPagina;
 
         //Retorno en partes con array slice los datos paginados
         return array_slice($productos, $inicio, $productosPorPagina);
+    }
+
+    public function obtenerCantidadTotal($search = null) {
+        $productos = $this->leer();
+        if($search) {
+            $productos = array_filter($productos, function($producto) use ($search) {
+                return strpos($producto['nombre'], $search) !== false || 
+                       strpos((string)$producto['precio'], $search) !== false || 
+                       strpos($producto['created_at'], $search) !== false;
+            });
+        }
+
+        //Retornamos el total de los productos
+        return count($productos);
     }
 
     //------------------------------------------------------------------------------------------------------------
@@ -58,13 +65,18 @@ class ProductoModelo {
     public function obtenerPorId($id) {
         $productos = $this->leer();
         foreach ($productos as $producto) {
-            var_dump($producto['id']);
             if ($producto['id'] == $id) {
                 return $producto;
             }
         }
 
         return null;
+    }
+
+    //Funcion para obntener el ultimo elemento del archivo json para poder identificar el ultimo elemento insertado
+    public function obtenerUltimoElemento() {
+        $productos = $this->leer();
+        return end($productos);
     }
 
     public function insertar($producto) {
@@ -76,13 +88,15 @@ class ProductoModelo {
 
     public function actualizar($id, $productoAct) {
         $productos = $this->leer();
-        foreach ($productos as &$producto) {
-            if ($producto['id'] == $id) {
-                $producto = array_merge($producto, $productoAct);
-                $this->guardar($producto);
-                return;
+        for($i = 0; $i < count($productos); $i++) {
+            if($productos[$i]['id'] == $id) {
+                $productoAct['id'] = $id;
+                $productos[$i] = $productoAct;
+                break;
             }
         }
+        $this->guardar($productos);
+        return "Producto actualizado exitosamente";
     }
 
     public function borrar($id) {

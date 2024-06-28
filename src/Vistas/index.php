@@ -48,7 +48,7 @@
     <!-- Footer para la paginacion -->
      <div class="paginacion">
          <?php for ($i = 1; $i <= ceil($totalProductos / 5); $i++) { ?>
-             <a href="#" data-page="?pagina=<?= $i ?>"><?= $i ?></a>
+            <a href="index.php?pagina=<?= $i ?>&search=<?= htmlspecialchars($search) ?>">Pagina <?= $i ?></a>
          <?php } ?>
      </div>
 </body>

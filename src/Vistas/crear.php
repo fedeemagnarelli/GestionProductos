@@ -10,6 +10,8 @@
 <body>
     <h1>Crear Producto</h1>
     <form id="crearProd" method="post">
+        <input type="hidden" name="action" value="crear">
+        <input type="hidden" name="token" value="<?= htmlspecialchars($_SESSION['token']); ?>">
         <label for="nombre">Nombre:</label>
         <input type="text" name="nombre" id="nombre" required>
         <br>

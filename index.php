@@ -2,20 +2,29 @@
 require 'vendor/autoload.php';
 
 use GestionProductos\Controlador\ProductoControlador;
-use GestionProductos\Gestion\ProductoModelo;
-
-/* $mod = new ProductoModelo();
-var_dump($mod->obtenerTodos());
-exit; */
 
 $controlador = new ProductoControlador();
-if(isset($_GET['action'])) {
+
+$pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
+$search = isset($_GET['search']) ? $_GET['search'] : null;
+
+
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if(isset($_POST['action'])) {
+        return match ($_POST['action']) {
+            'insertar' => $controlador->insertar($_POST),
+            'editar' => $controlador->editar($_POST['id'], $_POST),
+            'eliminar' => $controlador->eliminar($_POST['id']),
+            default => $controlador->index($pagina, $search),
+        };
+    }
+} else if(isset($_GET['action'])) {
     return match ($_GET['action']) {
         'crear' => $controlador->crear(),
         'insertar' => $controlador->insertar($_POST),
         'editar' => $controlador->editar($_GET['id']),
-        default => $controlador->index(),
+        default => $controlador->index($pagina, $search),
     };
 } else {
-    $controlador->index();
+    $controlador->index($pagina, $search);
 }

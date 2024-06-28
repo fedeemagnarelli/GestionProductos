@@ -9,6 +9,8 @@
 <body>
     <h1>Editar Producto</h1>
     <form id="editProd" method="post">
+        <input type="hidden" name="action" value="editar">
+        <input type="hidden" name="token" value="<?= htmlspecialchars($_SESSION['token']); ?>">
         <input type="hidden" id="id" name="id" value="<?= $producto['id']; ?>">
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" name="nombre" value="<?= $producto['nombre']; ?>">
