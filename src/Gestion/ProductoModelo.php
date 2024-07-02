@@ -81,7 +81,9 @@ class ProductoModelo {
 
     public function insertar($producto) {
         $productos = $this->leer();
-        $producto['id'] = count($productos) + 1;
+        if(isset($producto['id'])) {
+            $producto['id'] = count($productos) + 1;
+        }
         $productos[] = $producto;
         $this->guardar($productos);
     }

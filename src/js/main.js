@@ -31,8 +31,8 @@ $(document).ready(function() {
         e.preventDefault();
         $.ajax({
             type: 'POST',
-            url: '../Controlador/ProductoControlador.php',
-            data: $('#crearForm').serialize(),
+            url: '/Controlador/ProductoControlador.php',
+            data: $('#crearProd').serialize(),
             success: function(r){
                 alert("Producto creado");
                 window.location.href = 'index.php';
@@ -47,9 +47,11 @@ $(document).ready(function() {
         e.preventDefault();
         $.ajax({
             type: 'POST',
-            url: '../Controlador/ProductoControlador.php',
-            data: $('#editForm').serialize(),
+            url: '/Controlador/ProductoControlador.php',
+            data: $('#editProd').serialize(),
             success: function(r){
+                console.log(r);
+                return;
                 alert("Producto editado");
                 window.location.href = 'index.php';
             },
@@ -60,18 +62,55 @@ $(document).ready(function() {
     });
 
     $('.deleteProd').on('click', function(e){
+        var id = $('.deleteProd').val();
         e.preventDefault();
         $.ajax({
             type: 'POST',
-            url: '../Controlador/ProductoControlador.php',
-            data: $('#deleteForm').serialize(),
+            url: 'index.php',
+            data: {
+                action: 'eliminar',
+                id:id
+            },
             success: function(r){
+                console.log(r);
+                return;
                 alert("Producto eliminado");
                 window.location.href = 'index.php';
             },
-            error: function(){
+            /* error: function(){
                 alert("Hubo un error al eliminar el producto");
-            }
+            } */
         });
     });
 });
+
+/* function crearProducto(producto) {
+    if( (validaVacio(producto))){
+        alert("Hay un error al, falta llenar algun campo");
+        return false;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: 'src/Controlador/ProductoControlador.php?action=crear',
+        async: false,
+        data: producto,
+        success: function(r){
+            console.log(r);
+            return;
+            alert("Producto actualizado");
+            window.location.href = 'index.php';
+        }
+    });
+}
+
+
+function validaVacio(valor) {
+	valor = valor.replace("&nbsp;", "");
+	valor = valor == undefined ? "" : valor;
+	if (!valor || 0 === valor.trim().length) {
+		return true;
+	} else {
+		return false;
+	}
+} */

@@ -23,6 +23,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         'crear' => $controlador->crear(),
         'insertar' => $controlador->insertar($_POST),
         'editar' => $controlador->editar($_GET['id']),
+        'eliminar' => $controlador->eliminar($_GET['id']),
         default => $controlador->index($pagina, $search),
     };
 } else {

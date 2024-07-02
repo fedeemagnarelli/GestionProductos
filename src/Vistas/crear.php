@@ -6,6 +6,8 @@
     <meta name="author" content="Federico Magnarelli">
     <meta name="description" content="Esquema simple para la gestion de productos">
     <title>Crear Productos</title>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="src/js/main.js"></script> -->
 </head>
 <body>
     <h1>Crear Producto</h1>
@@ -19,6 +21,7 @@
         <input type="number" name="precio" id="precio" required>
         <br>
         <button type="submit">Guardar</button>
+        <!-- <button type="button" onclick="crearProducto($('#crearProd').serialize())">Guardar</button> -->
     </form>
     <a href="index.php">Volver al inicio</a>
 </body>

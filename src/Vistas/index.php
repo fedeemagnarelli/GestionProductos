@@ -38,7 +38,8 @@
                     <td><?= $producto['created_at'] ?></td>
                     <td>
                         <a href="index.php?action=editar&id=<?= $producto['id'] ?>">Editar</a>
-                        <a href="#" class="deleteProd">Borrar</a>
+                        <a href="index.php?action=eliminar&id=<?= $producto['id'] ?>">Borrar</a>
+                        <!-- <button class='deleteProd' value='<?= $producto['id'] ?>'>Borrar</button> -->
                     </td>
                 </tr>
             <?php } ?>

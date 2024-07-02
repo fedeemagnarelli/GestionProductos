@@ -65,7 +65,7 @@ class ProductoControlador {
 
     public function crear() {
         session_start();
-        $this->token();
+        //$this->token();
         include __DIR__.'/../Vistas/crear.php';
     }
 
@@ -96,12 +96,18 @@ class ProductoControlador {
         try {
 
             //Si todo sale bien insertamos el producto.
-            $this->modelo->insertar($producto);
+            $final_prod = [
+                'id' => $this->modelo->obtenerUltimoElemento()['id'] + 1,
+                'nombre' => $producto['nombre'],
+                'precio' => $producto['precio'],
+                'created_at' => $producto['created_at']
+            ];
+            $this->modelo->insertar($final_prod);
             $this->logs('insert', 'el usuario'.$_SESSION['username'].' agrego un producto');
             echo "<script>
                     alert('Se cargo correctamente el producto');
+                    window.location.href = 'index.php';
                 </script>";
-            header("Location: index.php");
 
         } catch (Exception $e) {
             echo "Hubo un error al insertar: " . ($e->getMessage());
@@ -112,7 +118,7 @@ class ProductoControlador {
 
     public function editar($id) {
         session_start();
-        $this->token();
+        //$this->token();
         $producto = $this->modelo->obtenerPorId($id);
         include __DIR__.'/../Vistas/editar.php';
     }
@@ -144,12 +150,18 @@ class ProductoControlador {
         try { 
 
             //Si todo sale bien actualizamos el producto.
-            $this->modelo->actualizar($this->validadorInj($id), $producto);
+            $final_prod = [
+                'id' => $id,
+                'nombre' => $producto['nombre'],
+                'precio' => $producto['precio'],
+                'created_at' => $producto['created_at']
+            ];
+            $this->modelo->actualizar($id, $final_prod);
             $this->logs('actualizar', 'el usuario'.$_SESSION['username'].' actualizo un producto');
             echo "<script>
                     alert('Producto editado correctamente');
-                </script>"; 
-            header("Location: index.php");
+                    window.location.href = 'index.php';
+                </script>";
 
         }   catch (Exception $e) {
             echo "Hubo un error al actualizar: " . ($e->getMessage());
@@ -157,6 +169,7 @@ class ProductoControlador {
     }
 
     public function eliminar($id) {
+        session_start();
         //Variable creada para testear la info de los logs.
         if(isset($_SESSION['username'])) {
             $_SESSION['username'] = 'fedee';
@@ -164,12 +177,12 @@ class ProductoControlador {
 
         try {
 
-            $this->modelo->borrar($this->validadorInj($id));
+            $this->modelo->borrar($id);
             $this->logs('eliminar', 'el usuario'.$_SESSION['username'].' elimino un producto');
             echo "<script>
                     alert('Producto eliminado correctamente');
+                    window.location.href = 'index.php';
                 </script>";
-            header("Location: index.php");
 
         } catch (Exception $e) {
             echo "Hubo un error al eliminar: " . ($e->getMessage());
@@ -179,7 +192,7 @@ class ProductoControlador {
     //Funcion de grabacion de los logs
     public function logs($accion, $desc) {
         $log = "[".date('Y-m-d H:i:s')."] - ".strtoupper($accion)." - ".strtoupper($desc)."\n";
-        file_put_contents('../logs/detalles.log', $log, FILE_APPEND);
+        file_put_contents(__DIR__.'/../logs/detalles.log', $log, FILE_APPEND);
     }
 }
 
@@ -188,7 +201,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     //Uso return match en vez de hacer un switch con break para mas simplicidad
     return match($_GET['action']) {
-        'insertar' => $contorlador->insertar($_POST),
+        'crear' => $contorlador->insertar($_POST),
 
         'editar' => $contorlador->actualizar($_POST['id'], $_POST),
 
